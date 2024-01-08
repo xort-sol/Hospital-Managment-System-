@@ -20,24 +20,63 @@ const PMedicalHistory: FC<Props> = () => {
 
     // Dummy immunization history data
     
-    const [patientData, setPatientData] = useState<any>(null);
+    // const [patientData, setPatientData] = useState<any>(null);
+    
+    // const patientMemberShipCode = localStorage.getItem('memberShipCode');
+    // console.log("member ship code -->"+patientMemberShipCode);
 
-    useEffect(() => {
-        // Replace the URL with the correct endpoint for fetching patient data
-        const fetchData = async () => {
-            try {
-                const response = await fetch("http://localhost:5000/hospital/getPatient/121212");
-                const data = await response.json();
-                setPatientData(data);
-            } catch (error) {
-                console.error("Error fetching patient data:", error);
-            }
-        };
+    // useEffect(() => {
 
-        fetchData();
-    }, []);
+    //     // Replace the URL with the correct endpoint for fetching patient data
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await fetch(`http://localhost:5000/patient/getPatient/${patientMemberShipCode}`);
+    //             const data = await response.json();
+                
+    //             setPatientData(data);
+    //         } catch (error) {
+    //             console.error("Error fetching patient data:", error);
+    //         }
+    //     };
 
+    //     fetchData();
+    //     fetchData();
+    // }, []);
+
+    // console.log("patient Data fetched --> "+patientData);
    
+
+    const [patientData, setPatientData] = useState<any>(null);
+    const  hSinglepatientID  = localStorage.getItem('memberShipCode');
+  
+    useEffect(() => {
+      const fetchPatientDetails = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/patient/getPatient/${hSinglepatientID}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const data = await response.json();
+          setPatientData(data);
+        } catch (error) {
+          console.error("Error fetching patient details:", error);
+        }
+      };
+  
+      fetchPatientDetails();
+    }, [hSinglepatientID]);
+  
+    useEffect(() => {
+      if (patientData) {
+        console.log("fetched details -->", patientData.personalDetails.firstName);
+      }
+    }, [patientData]);
+  
+    if (!patientData) {
+      // You can render a loading indicator here if needed
+      return <div>Loading...</div>;
+    }
+  
 
     return (
         <div className="w-full h-full">
@@ -132,7 +171,7 @@ const PMedicalHistory: FC<Props> = () => {
                                     </div>
 
                                     <p className="font-semibold text-[16px]">
-                                        {item.dateOfVaccine}
+                                    {new Date(item.dateOfVaccine).toLocaleDateString()}
                                     </p>
                                 </div>
                             ))
@@ -154,8 +193,8 @@ const PMedicalHistory: FC<Props> = () => {
                 </div>
 
                 <div className=" w-full flex flex-col gap-2 h-[20rem] overflow-y-auto">
-                    {uploadDocuments.length > 0 ? (
-                        uploadDocuments?.map((item, index) => (
+                    { patientData.uploadDocuments.length > 0 ? (
+                        patientData.uploadDocuments?.map((item, index) => (
                             <div
                                 className="w-full h-20 flex justify-between py-10 px-5 items-start text-blue_color "
                                 key={index}
