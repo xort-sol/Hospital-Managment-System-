@@ -1,0 +1,146 @@
+
+
+
+
+
+
+// importing flags
+import usa from "../../../../assets/flag/us.png";
+import brazilf from "../../../../assets/flag/brazil-.png";
+import canada from "../../../../assets/flag/canada.png";
+
+
+
+
+
+
+
+
+
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [selectedCountry, setSelectedCountry] = useState({
+        value: "0",
+        label: "USA (+1)",
+        flag: usa,
+    });
+
+    const countryOptions = [
+        { value: "0", label: "USA (+1)", flag: usa },
+        { value: "1", label: "Canada (+1)", flag: canada },
+        { value: "55", label: "Brazil (+55)", flag: brazilf },
+        // Add more countries as needed
+    ];
+
+    const handlePhoneNumberChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setPhoneNumber(e.target.value);
+    };
+
+    const handlePhoneNumberSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("Submitted");
+        console.log("Selected Country:", selectedCountry);
+        console.log("Phone Number:", phoneNumber);
+        setPhoneNumber("");
+
+    };
+
+    const handleCountryChange = (selectedOption: any) => {
+        setSelectedCountry(selectedOption);
+    };
+
+
+
+
+    retuns start here
+
+
+
+
+
+
+{/* Phone number country wise */}
+
+                    <div className="flex w-3/4 justify-start items-center p-1 border rounded-full min-h-[40px]">
+                        {/* Country Code Select */}
+                        <div className="relative inline-block w-40">
+                            <div className="w-full bg-white  rounded-full">
+                                <div
+                                    className="flex items-center justify-between cursor-pointer "
+                                    onClick={() => {
+                                        document
+                                            .getElementById("country-options")
+                                            ?.classList.toggle("hidden");
+                                    }}
+                                >
+                                    <div>
+                                        {selectedCountry ? (
+                                            <div className="flex w-36  justify-start items-center gap-2">
+                                                <img
+                                                    src={selectedCountry?.flag}
+                                                    alt="country"
+                                                    className="h-10 w-10 object-cover"
+                                                />
+
+                                                <p>{selectedCountry?.label}</p>
+                                            </div>
+                                        ) : (
+                                            <span>Select Country Code</span>
+                                        )}
+                                    </div>
+                                    <div className="">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M19 9l-7 7-7-7"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                id="country-options"
+                                className="hidden absolute w-60 h-58 overflow-y-auto  bg-white border border-gray-300 rounded-lg shadow-lg"
+                            >
+                                {countryOptions.map((option) => (
+                                    <div
+                                        key={option.value}
+                                        className="cursor-pointer p-4 hover:bg-blue-100 flex items-center justify-start gap-1 "
+                                        onClick={() => {
+                                            handleCountryChange(option);
+                                            document
+                                                .getElementById(
+                                                    "country-options"
+                                                )
+                                                ?.classList.add("hidden");
+                                        }}
+                                    >
+                                        <img
+                                            src={option.flag}
+                                            alt="country"
+                                            className="h-10 w-10 object-cover"
+                                        />{" "}
+                                        {option.label}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Phone Number Input */}
+                        <input
+                            type="text"
+                            value={phoneNumber}
+                            onChange={handlePhoneNumberChange}
+                            placeholder="Enter Phone Number"
+                            className="p-3 rounded-full w-full"
+                        />
+                    </div>
